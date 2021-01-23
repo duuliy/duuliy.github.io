@@ -997,7 +997,7 @@ hr:after {
     overflow: hidden;
     text-align: right;
     padding: 40px;
-    max-width: 350px;
+    max-width: 200px;
   }
   body header .logo {
     margin-right: 0;
