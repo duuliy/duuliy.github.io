@@ -3,6 +3,7 @@
 <p>拿数据说话<br>先说dva：9个人的前端团队，2年不停迭代一个产品，4万多行代码，对打包速度，缓存等等做了优化，打包时间依然在120s左右，每次开发构建速度也很慢。<br>那就找原因吧，最后发现区分大小的CaseSensitivePathsPlugin 和eslint的检查占了大头时间，但他们又是内置的，怎么办呢？只能在初始化的时候干掉呗，<br>打包时间果然提升了80%。</p>
 <p>然后umi：这是可拔插式的插件可以装可以不要，还能递归package.json包，还自动构建router，是不是很香？确实能满足90%开发者的需求了，但是他内置包的功能<br>不一定是我想要的版本里面的功能和用法，当我想用新的插件或升级包时，岂不是又得配webpack（还不说会不会遇到要兼容更多情况的坑），打包时还会增加体积，<br>行行行，好吧，自己折腾一套吧。</p>
 <p>老项目拿出来直接升级吧 create-react-app，咦，东西比之前多很多，sass不想要，那么npm eject，吐血，还得去维护script的东西。react-app-rewired，咦mimic，又要多一个包，<br>强迫症犯了。</p>
+<p>虽然从esbuild出来之后，之前写框架的那批人现在都在写打包工具vite等，未来1.2年很可能是打包工具的元年，但是不影响现在写个</p>
 <p>用webpack-cli吧，于是…</p>
 <p>看代码吧（偷懒）<br><a target="_blank" rel="noopener" href="https://github.com/duuliy/react-project-template">https://github.com/duuliy/react-project-template</a></p>
 </article><br><br><span class="next-post"><a href="/2020/08/26/你不知道的react事件机制/" itemprop="url">上一章 ⇒</a></span><span class="prev-post"><a href="/2021/01/04/2020年终总结/" itemprop="url">⇐ 下一章 </a></span><br><br><br></main></body></html>
