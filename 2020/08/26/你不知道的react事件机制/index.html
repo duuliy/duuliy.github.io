@@ -14,7 +14,7 @@
 <p>推断：<br>&emsp;&emsp;但是每个子组件的事件却在同一行，又都叫’uc’,说明绑定的是同一个事件，目的是冒泡传递节点信息，而不是具体绑定的事件！！！</p>
 <p>查资料，查查查，1个多小时了，翻墙也找不到为什么？<br>得了，看看源码吧,验证一下推断。</p>
 <p>用了ensureListeningTo 做了事件委托，但是这三个为什么不做处理呢？</p>
-<pre class=" language-c"><code class="language-c"><span class="token keyword">case</span> TOP_CLOSE<span class="token punctuation">:</span>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">case</span> TOP_CLOSE<span class="token punctuation">:</span>
           <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isEventSupported</span><span class="token punctuation">(</span><span class="token function">getRawEventName</span><span class="token punctuation">(</span>dependency<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
             <span class="token function">trapCapturedEvent</span><span class="token punctuation">(</span>dependency<span class="token punctuation">,</span> mountAt<span class="token punctuation">)</span><span class="token punctuation">;</span>
           <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>

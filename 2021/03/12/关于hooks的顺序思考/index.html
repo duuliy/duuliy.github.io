@@ -4,24 +4,24 @@
 <h5 id="内部生成唯一key？"><a href="#内部生成唯一key？" class="headerlink" title="内部生成唯一key？"></a>内部生成唯一key？</h5><p>无法保证每次更新编译的hooks对用的上，如果一开始取if的true里面的hooks得到唯一key，下次更新if的false的hooks能得到唯一值，但是怎么在本次alternate找到上一次的唯一key呢？自定义hooks，多次调用的唯一key怎么解决呢？</p>
 <h4 id="手输入唯一key？"><a href="#手输入唯一key？" class="headerlink" title="手输入唯一key？"></a>手输入唯一key？</h4><p>被否了很多方案 （<a target="_blank" rel="noopener" href="https://overreacted.io/zh-hans/why-do-hooks-rely-on-call-order/">https://overreacted.io/zh-hans/why-do-hooks-rely-on-call-order/</a> ）什么<br>用户输入key、Symbol()等等</p>
 <h5 id="无侵入性，如果我在babel编译期间动态注入呢改变react的这个问题？"><a href="#无侵入性，如果我在babel编译期间动态注入呢改变react的这个问题？" class="headerlink" title="无侵入性，如果我在babel编译期间动态注入呢改变react的这个问题？"></a>无侵入性，如果我在babel编译期间动态注入呢改变react的这个问题？</h5><p>初始化：</p>
-<pre class=" language-c"><code class="language-c">function <span class="token function">useState</span><span class="token punctuation">(</span>initial<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-  hook<span class="token operator">=</span><span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+<pre class=" language-js"><code class="language-js"><span class="token keyword">function</span> <span class="token function">useState</span><span class="token punctuation">(</span>initial<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token operator">...</span>
+  hook<span class="token operator">=</span><span class="token punctuation">{</span>
     key<span class="token punctuation">:</span><span class="token string">'唯一id'</span>
-  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
-  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  <span class="token punctuation">}</span>
+  <span class="token operator">...</span>
 
   wipFiber<span class="token punctuation">.</span>hooks<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>hook<span class="token punctuation">)</span><span class="token punctuation">;</span>
   hookIndex<span class="token operator">++</span><span class="token punctuation">;</span>
   <span class="token keyword">return</span> <span class="token punctuation">[</span>hook<span class="token punctuation">.</span>state<span class="token punctuation">,</span> setState<span class="token punctuation">]</span><span class="token punctuation">;</span>
-<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 </code></pre>
 <p>但是如何保证每次update的key都一样呢？</p>
-<pre class=" language-c"><code class="language-c"><span class="token comment" spellcheck="true">//每次更新都取上一次的key</span>
-  this<span class="token punctuation">.</span>alternate <span class="token operator">=</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">,</span>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">//每次更新都取上一次的key</span>
+  <span class="token keyword">this</span><span class="token punctuation">.</span>alternate <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token operator">...</span><span class="token punctuation">,</span>
     oldHooksKey
-  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
 </code></pre>
 <p>思路是有的，但是实现上，如果依赖了自定义hooks的库，怎么编译？除非都走这个编译流程？ 😂</p>
 </article><br><br><span class="next-post"><a href="/2021/01/04/2020年终总结/" itemprop="url">上一章 ⇒</a></span><span class="prev-post"><a href="/2021/05/09/event-loop-最终版本/" itemprop="url">⇐ 下一章 </a></span><br><br><br></main></body></html>
