@@ -6,7 +6,8 @@
 <p>3.在事件循环中，每进行一次循环操作称为tick：<br>  A. 选择宏任务( macro task)（oldest task），有就执行一个。<br>  B. 检查是否存在微任务( micro tasks )，如果存在则不停执行，直到清空微任务。<br>  C.主线程 重复上述步骤。</p>
 <p>tips：<br>如果在执行微任务的过程中，产生了新的微任务，一样会将该微任务添加到微任务队列中，V8 引擎一直循环执行微任务队列中的任务，直到队列清空才算执行结束。<br>微任务和宏任务是绑定的，每个宏任务在执行时，会创建自己的微任务队列。<br>微任务的执行时长会影响当前宏任务的时长。比如一个宏任务在执行过程中，产生了 10 个微任务，执行每个微任务的时间是 10ms，那么执行这 10 个微任务的时间就是 100ms，也可以说这 10 个微任务让宏任务的执行时间延长了 100ms。<br>在一个宏任务中，分别创建一个用于回调的宏任务和微任务，无论什么情况下，微任务都早于宏任务执行。</p>
 <h5 id="来试试："><a href="#来试试：" class="headerlink" title="来试试："></a>来试试：</h5><p>例子：</p>
-<pre class=" language-c"><code class="language-c">console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<pre class=" language-c"><code class="language-c"><span class="token operator">&lt;</span>script<span class="token operator">></span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 <span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token function">function</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
   console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'timeout1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
@@ -22,7 +23,8 @@ new <span class="token function">Promise</span><span class="token punctuation">(
 
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script end'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-<span class="token comment" spellcheck="true">// start ,  p1 ,  end  , then1 ,  t1 , t2</span></code></pre>
+<span class="token comment" spellcheck="true">// start ,  p1 ,  end  , then1 ,  t1 , t2</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>script<span class="token operator">></span></code></pre>
 <p>解析：第一个宏任务是script ，内部第一层微任务先执行完，再执行第一层宏任务。。。再第一层宏任务中，再先把微任务执行完。。再执行第三层宏任务….<br>按照顺序先把第一个setTimeout进去异步队列，再把 promise嵌套setTimeout放进异步队列，而event Loop先取取oldest task。</p>
 <pre class=" language-c"><code class="language-c">function <span class="token function">test</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'start'</span><span class="token punctuation">)</span>
@@ -111,4 +113,4 @@ new <span class="token function">Promise</span><span class="token punctuation">(
 <p>3.node 和 浏览器 eventLoop的主要区别<br>浏览器中是一次执行只取异步队列的一个宏任务，然后执行完毕本层所有微任务，再进行下一个宏任务。<br>而在node中是直接将宏任务中的同步事件全部执行完毕，再依次去执行宏任务中的微任务。</p>
 <p>node11 之后一些特性已经向浏览器看齐了，宏微的事件循环一样了</p>
 <p>node8 的版本打印结果：也跟11之后一样，原因还没去探究。</p>
-</article><br><br><span class="next-post"><a href="/2021/03/12/关于hooks的顺序思考/" itemprop="url">上一章 ⇒</a></span><br><br><br></main></body></html>
+</article><br><br><span class="next-post"><a href="/2021/03/12/关于hooks的顺序思考/" itemprop="url">上一章 ⇒</a></span><span class="prev-post"><a href="/2021/07/30/刷100道leetcode后总结/" itemprop="url">⇐ 下一章 </a></span><br><br><br></main></body></html>
