@@ -1,0 +1,86 @@
+<!DOCTYPE html><html lang="en-us"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>手写SSR | duuliy</title><meta name="description" content="全网最简单，容易理解ssr..."><meta name="generator" content="duuliy"><meta name="author" content="duuliy"><meta name="keywords"><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=0"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="apple-touch-icon" sizes="57x57" href="/images/logo.png"><link rel="apple-touch-icon" sizes="60x60" href="/images/logo.png"><link rel="apple-touch-icon" sizes="72x72" href="/images/logo.png"><link rel="apple-touch-icon" sizes="76x76" href="/images/logo.png"><link rel="apple-touch-icon" sizes="114x114" href="/images/logo.png"><link rel="apple-touch-icon" sizes="120x120" href="/images/logo.png"><link rel="apple-touch-icon" sizes="144x144" href="/images/logo.png"><link rel="apple-touch-icon" sizes="152x152" href="/images/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"><link rel="icon" type="image/png" sizes="128x128" href="/images/favicon-128.png"><link rel="icon" type="image/png" sizes="196x196" href="/images/favicon-196x196.png"><meta name="msapplication-TileColor" content="#FFFFFF"><meta name="msapplication-TileImage" content="logo.png"><meta name="msapplication-square70x70logo" content="logo.png"><meta name="msapplication-square150x150logo" content="logo.png"><meta name="msapplication-wide310x150logo" content="logo.png"><meta name="msapplication-square310x310logo" content="logo.png"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head><body itemscope itemtype="https://schema.org/WebPage"><header itemscope itemtype="https://schema.org/WPHeader"><div class="logo"></div><h1><a href="/" alt="duuliy" title="duuliy" itemprop="headline">duuliy</a></h1><p itemprop="description"></p><nav itemscope itemtype="https://schema.org/SiteNavigationElement"><ul><li itemprop="name"><a href="/ " alt="主页" title="主页" itemprop="url">主页</a></li><li itemprop="name"><a href="/archives" alt="归档" title="归档" itemprop="url">归档</a></li><li itemprop="name"><a href="/about" alt="关于" title="关于" itemprop="url">关于</a></li></ul></nav><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><p class="theme-by text-muted">Theme by
+<a target="_blank" rel="noopener" href="https://github.com/mkkhedawat/clexy">clexy-hexo</a></p><p class="copyright text-muted">© duuliy • 2022</p></div></div></div></footer><div class="space"></div></header><main itemscope itemtype="https://schema.org/Blog"><article class="full"><h1 itemprop="headline" class="post-heading">手写SSR</h1><span class="post-meta"></span><span class="page-tag-anchor">2022-6-11</span><br><br><h5 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h5><p>写一篇全网最简单的手写ssr的文章，能看见，都靠缘分，毕竟本人很懒, 然后纯手打，传递概念，也没有商业用途，拜托喜欢挑刺命名啊等等的吹毛求疵，喜欢pua大佬离我远点，我谢谢你了，别看。。。<br>还有来找我博客网站的bug的大佬，我就是用hexo生成，有bug我就不改，就问你气不气？哈哈哈哈😂</p>
+<h5 id="关于SSR"><a href="#关于SSR" class="headerlink" title="关于SSR"></a>关于SSR</h5><p>相信很多人做seo都会用到SSR吧，对，曾今几年前我也做过2个nuxt.js 的项目，但是没有研究过原理。如今出现了SSG，ISR，DPR，不了解查一下，不缀述了。</p>
+<h5 id="关于SSR框架"><a href="#关于SSR框架" class="headerlink" title="关于SSR框架"></a>关于SSR框架</h5><p>Universal/nuxt/next/ice/VitePress  等等，轮子造的非常好对吧，商用的产品也不少，但是跟umi一样，打包后都会有框架代码，大堆api，至少也有几天的学习成本吧，<br>最最最重要的喜欢折腾的程序员喜欢极客，喜欢高定。。。但是诸多概念，设计，模型，性能，扩展性…..等等等，产出一个可以满足公司商用的SSR框架，可比单纯的一个<br>webpack脚手架可难多了，可是想成为专家，架构师，由兴趣驱动来做这件事不也相当nice吗？</p>
+<h5 id="手写SSR原理"><a href="#手写SSR原理" class="headerlink" title="手写SSR原理"></a>手写SSR原理</h5><p>由于我比较熟悉react，所以在react上面+ssr来记录下原理吧。</p>
+<p>前置知识点：ReactDom.hydrate, react-dom/server/renderToString</p>
+<p>先总结原理：<br>1.把client代理利用webpack+hydrate 打包起来，为水合js作准备。<br>2.利用renderToString在server生成html，为水合基座页面。</p>
+<p>client：</p>
+<pre class=" language-js"><code class="language-js">
+<span class="token comment" spellcheck="true">// index.js</span>
+<span class="token keyword">function</span> <span class="token function">App</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token operator">&lt;</span>p<span class="token operator">></span>利用水合反应向react的SSR注入js<span class="token operator">&lt;</span><span class="token operator">/</span>p<span class="token operator">></span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+ReactDom<span class="token punctuation">.</span><span class="token function">hydrate</span><span class="token punctuation">(</span>App<span class="token punctuation">,</span> document<span class="token punctuation">.</span><span class="token function">getElementById</span><span class="token punctuation">(</span><span class="token string">'root'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// webpack.client.js</span>
+<span class="token keyword">const</span> path <span class="token operator">=</span> <span class="token function">require</span><span class="token punctuation">(</span><span class="token string">'path'</span><span class="token punctuation">)</span>
+
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  mode<span class="token punctuation">:</span> <span class="token string">"development"</span><span class="token punctuation">,</span>
+  entry<span class="token punctuation">:</span> <span class="token string">'./src/index.js'</span><span class="token punctuation">,</span>
+  output<span class="token punctuation">:</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    filename<span class="token punctuation">:</span> <span class="token string">'dist.js'</span><span class="token punctuation">,</span>
+    path<span class="token punctuation">:</span> path<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>__dirname<span class="token punctuation">,</span> <span class="token string">'public'</span><span class="token punctuation">)</span>
+  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span><span class="token punctuation">,</span>
+  module<span class="token punctuation">:</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        test<span class="token punctuation">:</span> <span class="token regex">/\.js$/</span><span class="token punctuation">,</span>
+        loader<span class="token punctuation">:</span> <span class="token string">'babel-loader'</span><span class="token punctuation">,</span>
+        exclude<span class="token punctuation">:</span> <span class="token regex">/node_modules/</span><span class="token punctuation">,</span>
+        options<span class="token punctuation">:</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+          presets<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'@babel/preset-react'</span><span class="token punctuation">,</span> <span class="token punctuation">[</span><span class="token string">'@babel/preset-env'</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+        <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+      <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    <span class="token punctuation">]</span>
+  <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+</code></pre>
+<p>server：</p>
+<pre class=" language-js"><code class="language-js"><span class="token comment" spellcheck="true">// index.js</span>
+<span class="token keyword">import</span> path <span class="token keyword">from</span> <span class="token string">'path'</span>
+<span class="token keyword">import</span> React <span class="token keyword">from</span> <span class="token string">'react'</span>
+<span class="token keyword">import</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span> renderToString <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span> <span class="token keyword">from</span> <span class="token string">'react-dom/server'</span>
+<span class="token keyword">import</span> express <span class="token keyword">from</span> <span class="token string">'express'</span>
+
+<span class="token keyword">const</span> app <span class="token operator">=</span> <span class="token function">express</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+app<span class="token punctuation">.</span><span class="token function">use</span><span class="token punctuation">(</span>express<span class="token punctuation">.</span><span class="token keyword">static</span><span class="token punctuation">(</span><span class="token string">'public'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> App<span class="token operator">=</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=</span><span class="token operator">></span><span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  <span class="token keyword">return</span> <span class="token string">'服务端渲染静态内容'</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+
+app<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span>req<span class="token punctuation">,</span> res<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  <span class="token keyword">const</span> content <span class="token operator">=</span> <span class="token function">renderToString</span><span class="token punctuation">(</span><span class="token operator">&lt;</span>App <span class="token operator">/</span><span class="token operator">></span><span class="token punctuation">)</span>
+  res<span class="token punctuation">.</span><span class="token function">send</span><span class="token punctuation">(</span><span class="token template-string"><span class="token string">`
+    &lt;html>
+      &lt;head>
+        &lt;meta charset="utf-8"/>  
+      &lt;/head>
+      &lt;body>
+        &lt;div id="component">$&amp;#123;content&amp;#125;&lt;/div>
+        &lt;div id="root">&lt;/div> 
+        &lt;script src="/bundle.js">&lt;/script>
+      &lt;/body>
+    &lt;/html>`</span></span><span class="token punctuation">)</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span><span class="token punctuation">)</span>  
+app<span class="token punctuation">.</span><span class="token function">listen</span><span class="token punctuation">(</span><span class="token number">8888</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">666</span><span class="token punctuation">)</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">//webpack.server.js</span>
+<span class="token comment" spellcheck="true">// 参考webpack.client.js ，server也需要用babel处理的</span>
+</code></pre>
+<p>接下来跑起来或者用nginx试试吧</p>
+<h5 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h5><p>妥妥跟mvvm一样，属于系统内架构。</p>
+<p>欢迎有兴趣的伙伴来联系我，我们可以一起拓展，来写：</p>
+<ol>
+<li>SSG，ISG，DPR 模式，搭配monorepo，搭配微服务等。</li>
+<li>开源基础模式。</li>
+<li>针对行业，高定商用框架。</li>
+</ol>
+<p>也许在未来我也会一个人去做这件事…</p>
+</article><br><br><span class="next-post"><a href="/2022/04/15/你不知道的国际化/" itemprop="url">上一章 ⇒</a></span><br><br><br></main></body></html>
