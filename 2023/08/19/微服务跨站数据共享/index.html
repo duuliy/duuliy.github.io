@@ -1,21 +1,33 @@
 <!DOCTYPE html><html lang="en-us"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>微服务跨站数据共享 | duuliy</title><meta name="description" content="进入文章"><meta name="generator" content="duuliy"><meta name="author" content="duuliy"><meta name="keywords"><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=0"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="apple-touch-icon" sizes="57x57" href="/images/logo.png"><link rel="apple-touch-icon" sizes="60x60" href="/images/logo.png"><link rel="apple-touch-icon" sizes="72x72" href="/images/logo.png"><link rel="apple-touch-icon" sizes="76x76" href="/images/logo.png"><link rel="apple-touch-icon" sizes="114x114" href="/images/logo.png"><link rel="apple-touch-icon" sizes="120x120" href="/images/logo.png"><link rel="apple-touch-icon" sizes="144x144" href="/images/logo.png"><link rel="apple-touch-icon" sizes="152x152" href="/images/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"><link rel="icon" type="image/png" sizes="128x128" href="/images/favicon-128.png"><link rel="icon" type="image/png" sizes="196x196" href="/images/favicon-196x196.png"><meta name="msapplication-TileColor" content="#FFFFFF"><meta name="msapplication-TileImage" content="logo.png"><meta name="msapplication-square70x70logo" content="logo.png"><meta name="msapplication-square150x150logo" content="logo.png"><meta name="msapplication-wide310x150logo" content="logo.png"><meta name="msapplication-square310x310logo" content="logo.png"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head><body itemscope itemtype="https://schema.org/WebPage"><header itemscope itemtype="https://schema.org/WPHeader"><div class="logo"></div><h1><a href="/" alt="duuliy" title="duuliy" itemprop="headline">duuliy</a></h1><p itemprop="description"></p><nav itemscope itemtype="https://schema.org/SiteNavigationElement"><ul><li itemprop="name"><a href="/ " alt="主页" title="主页" itemprop="url">主页</a></li><li itemprop="name"><a href="/archives" alt="归档" title="归档" itemprop="url">归档</a></li><li itemprop="name"><a href="/about" alt="关于" title="关于" itemprop="url">关于</a></li></ul></nav><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><p class="theme-by text-muted">Theme by
-<a target="_blank" rel="noopener" href="https://github.com/mkkhedawat/clexy">clexy-hexo</a></p><p class="copyright text-muted">© duuliy • 2023</p></div></div></div></footer><div class="space"></div></header><main itemscope itemtype="https://schema.org/Blog"><article class="full"><h1 itemprop="headline" class="post-heading">微服务跨站数据共享</h1><span class="post-meta"></span><span class="page-tag-anchor">2023-8-19</span><br><br><h4 id="拆服务"><a href="#拆服务" class="headerlink" title="拆服务"></a>拆服务</h4><pre><code>当小明喊着先有后优的口号快速完成了0到1之后，发现从1到N的过程产品越来越大，问题越来越多，虽然拆服务会有很大的成本和风险，但是为了低耦合，高内聚，高可维护，高可复用，独立部署....并且各项条件达到后，开始了拆服务，有独立的各种组件仓库，方法仓库，业务仓库，第三方仓库，静态资源仓库，站点仓库....</code></pre>
-<h4 id="feign-（https-github-com-OpenFeign-feign）"><a href="#feign-（https-github-com-OpenFeign-feign）" class="headerlink" title="feign （https://github.com/OpenFeign/feign）"></a>feign （<a target="_blank" rel="noopener" href="https://github.com/OpenFeign/feign%EF%BC%89">https://github.com/OpenFeign/feign）</a></h4><pre><code>可是同事小张在站点A开发时候，发现页面a的模块1，模块2，模块3分别来自不同的仓库，模块2影响子站，模块3还影响非同源的站点B，页面a还需要在pc和移动端都有呈现需求。于是想js有没有办法像java非常成熟的RPC一样在不同服务之间通讯？</code></pre>
+<a target="_blank" rel="noopener" href="https://github.com/mkkhedawat/clexy">clexy-hexo</a></p><p class="copyright text-muted">© duuliy • 2023</p></div></div></div></footer><div class="space"></div></header><main itemscope itemtype="https://schema.org/Blog"><article class="full"><h1 itemprop="headline" class="post-heading">微服务跨站数据共享</h1><span class="post-meta"></span><span class="page-tag-anchor">2023-8-19</span><br><br><h4 id="拆服务"><a href="#拆服务" class="headerlink" title="拆服务"></a>拆服务</h4><pre><code>当小明喊着先有后优的口号快速完成了0到1之后，发现从1到N的过程产品越来越大，问题越来越多，虽然拆服务会有很大的成本和风险，
+但是为了低耦合，高内聚，高可维护，高可复用，独立部署....并且各项条件达到后，
+开始了拆服务，有独立的各种组件仓库，方法仓库，业务仓库，第三方仓库，静态资源仓库，站点仓库....</code></pre>
+<pre class=" language-js"><code class="language-js"></code></pre>
+<h4 id="feign-（https-github-com-OpenFeign-feign）"><a href="#feign-（https-github-com-OpenFeign-feign）" class="headerlink" title="feign （https://github.com/OpenFeign/feign）"></a>feign （<a target="_blank" rel="noopener" href="https://github.com/OpenFeign/feign%EF%BC%89">https://github.com/OpenFeign/feign）</a></h4><pre><code>可是同事小张在站点A开发时候，发现页面a的模块1，模块2，模块3分别来自不同的仓库，模块2影响子站，模块3还影响非同源的站点B，
+页面a还需要在pc和移动端都有呈现需求。于是想js有没有办法像java非常成熟的RPC一样在不同服务之间通讯？</code></pre>
+<pre class=" language-js"><code class="language-js"></code></pre>
 <h4 id="整理知识库"><a href="#整理知识库" class="headerlink" title="整理知识库"></a>整理知识库</h4><pre><code>于是小张开始了回忆知识片段：
 1.让后端帮助我们存？
 2.node中间层，redis？
 3.indexDB，localForage，同源 兼容性不友好？
-4.跨不同站点用cookie（domian），但是不同浏览器对同一域名大小（Firefox/safari 4097字节，IE 4095，Chrome 4097每个）和数量（ie 50个，Firefox 50，Chrome 53，Safari 无具体）有不同的限制，并且会占用带宽？监听变化chrome.cookies API？
-5.sessionstorage 存活期在会话窗口 大小5-10M 同源共享，同源页面/iframe 可以共享，支持window.open()共享，a标签的_blank方式打开（Chrome支持，firefox不支持）共享，复制打开对应URL 不能共享。
-6.localStorage 需要手动清除 大小5M 同源共享，监听变化（https://github.com/duuliy/jsoo/blob/master/%E7%9B%91%E5%90%AClocalStorage.html）,无限存储（https://github.com/duuliy/jsoo/blob/master/%E6%97%A0%E9%99%90%E5%82%A8%E5%AD%98.html）
-7.跨站点数据同步 postMessage（https://github.com/duuliy/jsoo/blob/master/postMessage.html，https://github.com/duuliy/jsoo/blob/master/postMessage2.html）</code></pre>
+4.跨不同站点用cookie（domian），但是不同浏览器对同一域名大小（Firefox/safari 4097字节，IE 4095，Chrome 4097每个）
+和数量（ie 50个，Firefox 50，Chrome 53，Safari 无具体）有不同的限制，并且会占用带宽？监听变化chrome.cookies API？
+5.sessionstorage 存活期在会话窗口 大小5-10M 同源共享，同源页面/iframe 可以共享，支持window.open()共享，
+a标签的_blank方式打开（Chrome支持，firefox不支持）共享，复制打开对应URL 不能共享。
+6.localStorage 需要手动清除 大小5M 同源共享，
+监听变化（https://github.com/duuliy/jsoo/blob/master/%E7%9B%91%E5%90%AClocalStorage.html）,
+无限存储（https://github.com/duuliy/jsoo/blob/master/%E6%97%A0%E9%99%90%E5%82%A8%E5%AD%98.html）
+7.跨站点数据同步 postMessage
+（https://github.com/duuliy/jsoo/blob/master/postMessage.html，
+https://github.com/duuliy/jsoo/blob/master/postMessage2.html）</code></pre>
+<pre class=" language-js"><code class="language-js"></code></pre>
 <h4 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h4><pre><code>结合现有业务条件及需求，前端用户行为监控等：
 localStorage + localForage + postMessage + cookie 开发一个综合的storge包来管理此类数据，并根据条件进行降级使用。
 1.当用户使用环境具有较好的兼容性 localStorage + localForage + postMessage，来满足用户的高级功能需求。
 2.当处于移动端或一般使用环境 localStorage + postMessage，限制需要部分大容量的功能。
 3.当处于权限限制（safari,默认防止跨站跟踪）或较差使用环境 localStorage + cookie，限制需要大容量和部分中级容量的功能。
 
-
 第三方推荐：https://github.com/zendesk/cross-storage</code></pre>
+<pre class=" language-js"><code class="language-js"></code></pre>
 <h4 id="进一步优化"><a href="#进一步优化" class="headerlink" title="进一步优化"></a>进一步优化</h4><p>  1.不同浏览器之间，node中间层，redis？<br>  2.随着时间推移，技术更迭继续优化结果2，3</p>
 </article><br><br><span class="next-post"><a href="/2023/03/26/你不知道的js计算/" itemprop="url">上一章 ⇒</a></span><br><br><br></main></body></html>
