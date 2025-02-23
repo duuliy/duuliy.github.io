@@ -5,9 +5,8 @@
 <p>2.所以module-federation得单独拆出来专门一个仓库远程包。</p>
 <p>3.这下1的问题解决了，但是新问题是各组件交叉引用，以及强要求LCP的组件还必须留在子站然后组合远程包组件再module-federation出去给别的子站来用，下面称之为嵌套打包。</p>
 <p>4.嵌套打包在复杂场景下会有问题，不仅仅是模块加载失败/多实例冲突/生产环境缓存等常见问题，除开必要解决这个问题，还需要补齐开发规范，注意代码设计，联邦嵌套不可超过2层。</p>
-<h4 id="调研"><a href="#调研" class="headerlink" title="调研"></a>调研</h4><p>1.next嵌套打包是失败的, fe3=&gt;fe2,fe2=&gt;fe1,fe3=&gt;fe1都是ok的，fe3=&gt;fe2=&gt;fe1的时候会报错找不到fe1，但是fe3不去fe2里面找fe1，而是去自己的chunks里面找QAQ，此时加载的资源也是比前面三种情况多很多。见代码：<a target="_blank" rel="noopener" href="https://github.com/duuliy/next-project-template/tree/dev-module-next2">https://github.com/duuliy/next-project-template/tree/dev-module-next2</a></p>
-<p>2.神奇的是1的情况放在react里面就没有问题。见代码：<a target="_blank" rel="noopener" href="https://github.com/duuliy/react-next/tree/master/react-module-federation">https://github.com/duuliy/react-next/tree/master/react-module-federation</a></p>
-<h4 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h4><p>1.联邦组件大部分实际上不需要ssr，所以可以尝试整体架构升级，放在react环境里面，列出next下需要传入的东西eg：locale等，合理设计代码解决。</p>
-<p>2.摸清链路在runtime时处理，但治标不治本，a=&gt;b=&gt;c解决了, 3=&gt;2=&gt;1还有其他问题。</p>
-<p>3.现已明确混用的next12和13环境下shared不能解决问题，继续调研…</p>
+<h4 id="调研"><a href="#调研" class="headerlink" title="调研"></a>调研</h4><p>1.next嵌套打包是失败的, fe3=&gt;fe2,fe2=&gt;fe1,fe3=&gt;fe1都是ok的，fe3=&gt;fe2=&gt;fe1的时候会报错找不到fe1，实际上fe2共享出去的代码是只有引入fe1的代码，并没有fe1内容的代码。但是fe3会在自己的chunks去找fe1，哪怕通过script引入fe1也找不到，因为原代码引入fe1通过webpack改名了，此时加载的资源也是比前面三种情况多很多。见代码：<a target="_blank" rel="noopener" href="https://github.com/duuliy/next-project-template/tree/dev-module-next2">https://github.com/duuliy/next-project-template/tree/dev-module-next2</a></p>
+<p>2.在react里面就没有问题。见代码：<a target="_blank" rel="noopener" href="https://github.com/duuliy/react-next/tree/master/react-module-federation">https://github.com/duuliy/react-next/tree/master/react-module-federation</a></p>
+<p>3.next+federation/nextjs-mf 是可以嵌套打包的：<a target="_blank" rel="noopener" href="https://github.com/duuliy/next-project-template/tree/dev-module-next3">https://github.com/duuliy/next-project-template/tree/dev-module-next3</a></p>
+<h4 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h4><p>除开各第三方需要处理，最主要的是federation/nextjs-mf和module-federation/runtime里面的方法不能混用，原因不赘述了，多了解下原理就知道了</p>
 </article><br><br><span class="next-post"><a href="/2024/12/08/mac和window中文输入法下，在输入框中输入英文的防抖处理的兼容/" itemprop="url">上一章 ⇒</a></span><br><br><br></main></body></html>
