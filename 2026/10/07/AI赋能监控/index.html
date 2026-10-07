@@ -1,0 +1,38 @@
+<!DOCTYPE html><html lang="en-us"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><title>AI赋能监控 | duuliy</title><meta name="description" content="AI赋能监控...."><meta name="generator" content="duuliy"><meta name="author" content="duuliy"><meta name="keywords"><meta name="HandheldFriendly" content="True"><meta name="MobileOptimized" content="320"><meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=0"><link rel="stylesheet" type="text/css" href="/styles/screen.css"><link rel="apple-touch-icon" sizes="57x57" href="/images/logo.png"><link rel="apple-touch-icon" sizes="60x60" href="/images/logo.png"><link rel="apple-touch-icon" sizes="72x72" href="/images/logo.png"><link rel="apple-touch-icon" sizes="76x76" href="/images/logo.png"><link rel="apple-touch-icon" sizes="114x114" href="/images/logo.png"><link rel="apple-touch-icon" sizes="120x120" href="/images/logo.png"><link rel="apple-touch-icon" sizes="144x144" href="/images/logo.png"><link rel="apple-touch-icon" sizes="152x152" href="/images/logo.png"><link rel="apple-touch-icon" sizes="180x180" href="/images/logo.png"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png"><link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png"><link rel="icon" type="image/png" sizes="128x128" href="/images/favicon-128.png"><link rel="icon" type="image/png" sizes="196x196" href="/images/favicon-196x196.png"><meta name="msapplication-TileColor" content="#FFFFFF"><meta name="msapplication-TileImage" content="logo.png"><meta name="msapplication-square70x70logo" content="logo.png"><meta name="msapplication-square150x150logo" content="logo.png"><meta name="msapplication-wide310x150logo" content="logo.png"><meta name="msapplication-square310x310logo" content="logo.png"><link rel="stylesheet" href="/css/prism.css" type="text/css"></head><body itemscope itemtype="https://schema.org/WebPage"><header itemscope itemtype="https://schema.org/WPHeader"><div class="logo"></div><h1><a href="/" alt="duuliy" title="duuliy" itemprop="headline">duuliy</a></h1><p itemprop="description"></p><nav itemscope itemtype="https://schema.org/SiteNavigationElement"><ul><li itemprop="name"><a href="/ " alt="主页" title="主页" itemprop="url">主页</a></li><li itemprop="name"><a href="/archives" alt="归档" title="归档" itemprop="url">归档</a></li><li itemprop="name"><a href="/about" alt="关于" title="关于" itemprop="url">关于</a></li></ul></nav><footer><div class="container beautiful-jekyll-footer"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><p class="theme-by text-muted">Theme by
+<a target="_blank" rel="noopener" href="https://github.com/mkkhedawat/clexy">clexy-hexo</a></p><p class="copyright text-muted">© duuliy • 2026</p></div></div></div></footer><div class="space"></div></header><main itemscope itemtype="https://schema.org/Blog"><article class="full"><h1 itemprop="headline" class="post-heading">AI赋能监控</h1><span class="post-meta"></span><span class="page-tag-anchor">2026-10-7</span><br><br><h4 id="背景："><a href="#背景：" class="headerlink" title="背景："></a>背景：</h4><p>现如今，AI 早已深入各行各业的工作，尤其是互联网程序员的日常开发与运维，在很多场景下帮我们大幅提效。Sentry 往往面临着“告警多、定位难、噪音大”的痛点，今天就聊下 AI 赋能 Sentry 错误治理这个落地场景。</p>
+<h4 id="一、Sentry-前置降噪配置"><a href="#一、Sentry-前置降噪配置" class="headerlink" title="一、Sentry 前置降噪配置"></a>一、Sentry 前置降噪配置</h4><p>想要 AI 分析更高效，第一步是在源头减少无效告警，从 Sentry 客户端与告警侧做好基础配置。</p>
+<h6 id="1-告警配置"><a href="#1-告警配置" class="headerlink" title="1. 告警配置"></a>1. 告警配置</h6><p>不开启全量事件告警，基于<code>issue</code>维度配置告警规则，增加重复告警抑制策略，避免短时间错误风暴造成消息轰炸。</p>
+<h6 id="2-客户端代码配置"><a href="#2-客户端代码配置" class="headerlink" title="2. 客户端代码配置"></a>2. 客户端代码配置</h6><p>初始化 Sentry 时增加多层过滤规则，按需适配业务场景：</p>
+<ul>
+<li><code>allowUrls</code>：页面白名单，仅收集业务域名内报错，过滤非目标来源；</li>
+<li><code>ignoreErrors</code>：报错文本黑名单，屏蔽三方脚本、浏览器扩展、网络抖动、用户本地环境异常等非业务报错；</li>
+<li><code>denyUrls</code>：页面黑名单，直接忽略指定页面来源的上报事件；</li>
+<li><code>sampleRate</code>：事件采样率，控制上报事件总量，平衡可观测性、前端性能与流量开销。</li>
+</ul>
+<h4 id="二、AI-自动分析完整链路"><a href="#二、AI-自动分析完整链路" class="headerlink" title="二、AI 自动分析完整链路"></a>二、AI 自动分析完整链路</h4><p>整体流程：<code>fetch → triage → analyze → archive → report:push</code></p>
+<ol>
+<li><strong>fetch</strong>：拉取 Sentry 未解决 issue 和事件，同步获取每个错误对应的页面分布信息；</li>
+<li><strong>triage</strong>：规则预过滤，快速区分噪音<code>noise</code>和暂无法判定<code>undetermined</code>错误，命中过滤规则直接归入噪音桶，不调用大模型节省成本；</li>
+<li><strong>analyze</strong>：未过滤的错误进入深度分析。使用 claude + Codegraph + Sentry Source Map API + build 产物做源码分析：claude 负责模型编排、源码读取检索、git blame/log 追溯，Codegraph 提供符号与调用链定位，解决跨文件组件链路问题；之后二次读取源码行号做结果核验。仓库地址：<a target="_blank" rel="noopener" href="https://github.com/colbymchenry/codegraph">https://github.com/colbymchenry/codegraph</a></li>
+<li><strong>archive</strong>：将判定为噪音的告警在 Sentry 归档；</li>
+<li><strong>report:push</strong>：生成分析报告，输出到文档并推送群消息通知。</li>
+</ol>
+<p>分析后将结果分流至三个桶：<code>noise桶</code>、<code>undetermined桶</code>、<code>needs_human桶</code>。噪音桶支持人工复审，审核通过自动归档，还能反向生成客户端 ignore 配置，从源头屏蔽同类报错。</p>
+<h6 id="各模块贡献权重"><a href="#各模块贡献权重" class="headerlink" title="各模块贡献权重"></a>各模块贡献权重</h6><ul>
+<li>claude（模型编排 + Read/Grep + git log/blame）~45%：整套结论的核心组织者，绝大多数代码行号定位由它输出，缺失则分析链路断裂；</li>
+<li>codegraph（符号 / 调用链定位）~25%：全部分析场景都会用到，没有它跨文件链路只能靠猜测；</li>
+<li>Sentry Source Map ~20%：还原业务源码栈能力有限，但决定错误定性是否准确；</li>
+<li>build 产物～10%：不负责 source map 路径还原，价值在于版本对齐和 chunk 内容复核。</li>
+</ul>
+<h4 id="三、落地效果"><a href="#三、落地效果" class="headerlink" title="三、落地效果"></a>三、落地效果</h4><p>子站一（特殊场景累计） Sentry 留存 2*** 条业务告警，影响 xx*10w 人次；未解决仅 * 条（涉及 * 用户），告警消解率 **99%+。</p>
+<h6 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h6><p>Q：为什么不用官方的 sentry-mcp+Seer 方案？<br>主要两个痛点：付费成本高、token消耗量大。</p>
+<p>Q：像水合错误（#418），本地开发可以快速定位，为什么生产环境很难定位，修复后还持续上报？</p>
+<p>A：根源在于 React 生产构建会剥离调试信息：</p>
+<ul>
+<li>开发环境：完整错误文本、组件栈路径、文件行号、Next 水合的服务端 / 客户端 HTML 差异提示；</li>
+<li>生产环境：代码压缩后只保留<code>Minified React error #xxx</code>错误码，丢失组件栈与差异详情。</li>
+</ul>
+<p>同时 Sentry 的 issue 是错误聚合分组，同一个 issue 聚合了大量不同页面、不同触发位置的事件。修复单处问题，其他页面同根因报错还会持续上报，需要批量拉取全部关联事件做全局分析。</p>
+<h6 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h6><p>这套方案的核心思路：<strong>客户端前置降噪 + AI 源码深度分析 + 自动归档分流</strong>。<br>把大量原本需要人工逐行排查的 Sentry 告警交给 AI 处理，补足 Sentry 原生在源码调用链路分析上的短板，大幅降低前端错误治理人力成本。</p>
+<h6 id="tips"><a href="#tips" class="headerlink" title="tips"></a>tips</h6><p>报告：1.id 2.影响范围（用户/事件等）3.页面定位 4.产生环境（系统/浏览器等）5.快捷链接 6.责任方 7.分析来源 8.保障含义 9.问题定位 10.根因分析 11.修复建议</p>
+</article><br><br><span class="next-post"><a href="/2026/06/12/记next升级遇到的一个问题/" itemprop="url">上一章 ⇒</a></span><br><br><br></main></body></html>
